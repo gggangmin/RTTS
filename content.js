@@ -11,14 +11,16 @@ recognition.start();
 // 음성 인식 결과 처리
 recognition.onresult = function(event) {
   var result = event.results[event.results.length - 1][0].transcript;
+  if (result){
+    // 백그라운드 스크립트로 메시지 전송
+    chrome.runtime.sendMessage({ type: 'recognitionResult', result: result });
+  }
   
-  // 백그라운드 스크립트로 메시지 전송
-  chrome.runtime.sendMessage({ type: 'recognitionResult', result: result });
 };
 
 // 백그라운드 스크립트로부터 메시지 수신
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  if (request.type === 'recognitionResult') {
+  if (request.type === 'textResult') {
     var result = request.result;
     
     // 기존의 결과 요소 제거
@@ -32,8 +34,8 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     resultElement.id = 'speech-result';
     resultElement.textContent = result;
     resultElement.style.position = 'fixed';
-    resultElement.style.top = '10px';
-    resultElement.style.left = '10px';
+    resultElement.style.top = '50%';
+    resultElement.style.left = '50%';
     resultElement.style.padding = '10px';
     resultElement.style.background = 'rgba(255, 255, 255, 0.8)';
     resultElement.style.zIndex = '9999';
