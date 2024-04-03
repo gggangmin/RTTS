@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Text Displayer",
+  "version": "1.0",
+  "description": "Displays text on the current webpage.",
+  "permissions": ["activeTab", "scripting"],
+  "action": {
+    "default_title": "Display Text"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}
